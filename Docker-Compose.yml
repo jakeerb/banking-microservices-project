@@ -1,0 +1,38 @@
+services:
+  user-service:
+    build: ./user-service/user-service
+    container_name: user-service-compose
+    ports:
+      - "8081:8081"
+
+  auth-service:
+    build: ./auth-service/auth-service
+    container_name: auth-service-compose
+    ports:
+      - "8082:8082"
+
+  card-service:
+    build: ./card-service/card-service
+    container_name: card-service-compose
+    ports:
+      - "8083:8083"
+
+  transaction-service:
+    build: ./transaction-service/transaction-service
+    container_name: transaction-service-compose
+    ports:
+      - "8084:8084"
+
+  fraud-detection-service:
+    build: ./fraud-detection-service/fraud-detection-service
+    container_name: fraud-detection-service-compose
+    ports:
+      - "8085:8085"
+
+  api-gateway:
+    build: ./api-gateway/api-gateway
+    container_name: api-gateway-compose
+    ports:
+      - "8080:8080"
+    environment:
+      JWT_SECRET: MyBankingAppJwtSecretKeyForDevelopmentOnly2026Secure
