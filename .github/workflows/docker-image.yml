@@ -1,0 +1,54 @@
+name: Docker Image Build
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+          cache: maven
+
+      - name: Build all microservices
+        run: |
+          for dir in \
+            api-gateway/api-gateway \
+            auth-service/auth-service \
+            card-service/card-service \
+            fraud-detection-service/fraud-detection-service \
+            transaction-service/transaction-service \
+            user-service/user-service
+          do
+            echo "Building $dir"
+            mvn -B package --file "$dir/pom.xml" -DskipTests
+          done
+
+      - name: Build API Gateway Docker image
+        run: docker build -t api-gateway:latest ./api-gateway/api-gateway
+
+      - name: Build Auth Service Docker image
+        run: docker build -t auth-service:latest ./auth-service/auth-service
+
+      - name: Build Card Service Docker image
+        run: docker build -t card-service:latest ./card-service/card-service
+
+      - name: Build Fraud Detection Docker image
+        run: docker build -t fraud-detection-service:latest ./fraud-detection-service/fraud-detection-service
+
+      - name: Build Transaction Service Docker image
+        run: docker build -t transaction-service:latest ./transaction-service/transaction-service
+
+      - name: Build User Service Docker image
+        run: docker build -t user-service:latest ./user-service/user-service
