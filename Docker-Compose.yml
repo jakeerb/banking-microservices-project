@@ -1,38 +1,38 @@
 services:
   user-service:
-    build: ./user-service/user-service
-    container_name: user-service-compose
+    image: jakeerbasha123/user-service:latest
+    container_name: user-service-deployment
     ports:
       - "8081:8081"
 
   auth-service:
-    build: ./auth-service/auth-service
-    container_name: auth-service-compose
+    image: jakeerbasha123/auth-service:latest
+    container_name: auth-service-deployment
     ports:
       - "8082:8082"
 
   card-service:
-    build: ./card-service/card-service
-    container_name: card-service-compose
+    image: jakeerbasha123/card-service:latest
+    container_name: card-service-deployment
     ports:
       - "8083:8083"
 
   transaction-service:
-    build: ./transaction-service/transaction-service
-    container_name: transaction-service-compose
+    image: jakeerbasha123/transaction-service:latest
+    container_name: transaction-service-deployment
     ports:
       - "8084:8084"
 
   fraud-detection-service:
-    build: ./fraud-detection-service/fraud-detection-service
-    container_name: fraud-detection-service-compose
+    image: jakeerbasha123/fraud-detection-service:latest
+    container_name: fraud-detection-service-deployment
     ports:
       - "8085:8085"
 
   api-gateway:
-    build: ./api-gateway/api-gateway
-    container_name: api-gateway-compose
+    image: jakeerbasha123/api-gateway:latest
+    container_name: api-gateway-deployment
     ports:
       - "8080:8080"
     environment:
-      JWT_SECRET: MyBankingAppJwtSecretKeyForDevelopmentOnly2026Secure
+      JWT_SECRET: "MyBankingAppJwtSecretKeyForDevelopmentOnly2026Secure"
