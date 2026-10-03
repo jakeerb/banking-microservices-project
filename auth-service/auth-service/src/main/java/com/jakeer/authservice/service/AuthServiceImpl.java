@@ -3,6 +3,7 @@ package com.jakeer.authservice.service;
 import com.jakeer.authservice.dto.LoginRequest;
 import com.jakeer.authservice.dto.LoginResponse;
 import com.jakeer.authservice.entity.AuthUser;
+import com.jakeer.authservice.exception.InvalidCredentialsException;
 import com.jakeer.authservice.repository.AuthRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
         LocalDateTime now = LocalDateTime.now();
         if (user.getLockedUntil() != null) {
             if (user.getLockedUntil().isAfter(now)) {
-                throw new RuntimeException("Invalid email or password");
+                throw new InvalidCredentialsException("Invalid email or password");
             }
 
             user.setLockedUntil(null);
@@ -63,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
             }
             authRepository.save(user);
 
-            throw new RuntimeException("Invalid email or password");
+            throw new InvalidCredentialsException("Invalid email or password");
         }
 
         user.setFailedLoginAttempts(0);
