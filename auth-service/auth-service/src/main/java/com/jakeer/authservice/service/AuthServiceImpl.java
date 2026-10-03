@@ -87,6 +87,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void createAuthUser(String email, String password) {
 
+        if (authRepository.existsByEmail(email)) {
+            throw new RuntimeException("Email already registered");
+        }
+
         AuthUser user = new AuthUser();
 
         // Set email
