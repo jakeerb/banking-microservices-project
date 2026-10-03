@@ -7,7 +7,7 @@ import com.jakeer.authservice.repository.AuthRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -30,19 +30,26 @@ public class AuthServiceImpl implements AuthService {
     public LoginResponse login(LoginRequest request) {
 
         // 1. Find user by email
-        Optional<AuthUser> userOptional =
-                authRepository.findByEmail(request.getEmail());
+        AuthUser user = authRepository
+                .findByEmail(request.getEmail())
+                .orElseThrow(() ->
+                        new RuntimeException("Invalid email or password"));
 
-        // 2. User not found
-        if (userOptional.isEmpty()) {
-            throw new RuntimeException("Invalid email or password");
-        }
-
-        AuthUser user = userOptional.get();
-
-        // 3. Check account status
+        // 2. Check account status
         if (!user.isEnabled()) {
             throw new RuntimeException("User account is disabled");
+        }
+
+        // 3. Enforce any active temporary lockout
+        LocalDateTime now = LocalDateTime.now();
+        if (user.getLockedUntil() != null) {
+            if (user.getLockedUntil().isAfter(now)) {
+                throw new RuntimeException("Invalid email or password");
+            }
+
+            user.setLockedUntil(null);
+            user.setFailedLoginAttempts(0);
+            authRepository.save(user);
         }
 
         // 4. Verify password
@@ -50,16 +57,26 @@ public class AuthServiceImpl implements AuthService {
                 request.getPassword(),
                 user.getPassword())) {
 
+            user.setFailedLoginAttempts(user.getFailedLoginAttempts() + 1);
+            if (user.getFailedLoginAttempts() >= 5) {
+                user.setLockedUntil(LocalDateTime.now().plusMinutes(15));
+            }
+            authRepository.save(user);
+
             throw new RuntimeException("Invalid email or password");
         }
 
-        // 5. Generate JWT
+        user.setFailedLoginAttempts(0);
+        user.setLockedUntil(null);
+        authRepository.save(user);
+
+        // 5. Generate JWT token
         String token = jwtService.generateToken(
                 user.getEmail(),
                 user.getRole()
         );
 
-        // 6. Prepare response
+        // 6. Prepare login response
         return new LoginResponse(
                 user.getEmail(),
                 user.getRole(),
@@ -67,16 +84,26 @@ public class AuthServiceImpl implements AuthService {
         );
     }
 
-
+    @Override
     public void createAuthUser(String email, String password) {
 
         AuthUser user = new AuthUser();
 
+        // Set email
         user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
+
+        // Encode password before saving
+        user.setPassword(
+                passwordEncoder.encode(password)
+        );
+
+        // Default role
         user.setRole("USER");
+
+        // Enable account by default
         user.setEnabled(true);
 
+        // Save user into database
         authRepository.save(user);
     }
 }

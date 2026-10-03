@@ -4,11 +4,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import lombok.Data;
 
 import java.util.Date;
 @Entity
 @Table(name="user_dtls")
+@Data
 public class User {
 
     @Id
@@ -52,11 +53,6 @@ public class User {
     @Column(name = "USER_CITY")
     private Integer userCity;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 8, message = "Password must be at least 8 characters")
-    @Column(name = "USERPASSWORD")
-    private String userPassword;
-
     @Column(name = "USER_ACC_STATUS")
     private String userAccStatus;
 
@@ -69,4 +65,7 @@ public class User {
 
     @Column(name="LOGIN_ATTEMPTS")
     private Integer loginAttempts = 0;
+
+    @Column(name = "IS_DELETED", nullable = false)
+    private Boolean deleted = false;
 }
