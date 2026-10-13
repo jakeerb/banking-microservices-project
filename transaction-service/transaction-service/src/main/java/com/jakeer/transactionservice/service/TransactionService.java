@@ -18,4 +18,6 @@ public interface TransactionService {
             Long transactionId,
             TransactionStatus status
     );
+
+    Long getTotalTransactions();
 }
