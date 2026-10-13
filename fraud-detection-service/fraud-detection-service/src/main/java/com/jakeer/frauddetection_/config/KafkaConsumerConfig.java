@@ -24,7 +24,7 @@ public class KafkaConsumerConfig {
         // Kafka server
         config.put(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                "localhost:9092"
+                System.getenv().getOrDefault("KAFKA_URL", "localhost:9092")
         );
 
         // Consumer group

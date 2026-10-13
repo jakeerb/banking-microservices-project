@@ -69,4 +69,9 @@ public class TransactionServiceimpl implements TransactionService {
 
         transactionRepository.save(transaction);
     }
+
+    @Override
+    public Long getTotalTransactions() {
+        return transactionRepository.countTotalTransactions();
+    }
 }

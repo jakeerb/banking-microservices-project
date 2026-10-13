@@ -38,4 +38,9 @@ public class TransactionController {
                 .status(HttpStatus.CREATED)
                 .body(transaction);
     }
+
+    @GetMapping("/dashboard/summary")
+    public ResponseEntity<Long> getTotalTransactions() {
+        return ResponseEntity.ok(transactionService.getTotalTransactions());
+    }
 }

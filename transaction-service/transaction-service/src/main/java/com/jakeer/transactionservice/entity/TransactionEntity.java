@@ -18,6 +18,7 @@ public class TransactionEntity {
     @Column(nullable = false)
     private Long customerId;
 
+
     @Column(nullable = false)
     private Long cardId;
 
