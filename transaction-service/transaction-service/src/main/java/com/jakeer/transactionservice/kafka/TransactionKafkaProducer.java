@@ -20,6 +20,25 @@ public class TransactionKafkaProducer {
                 "transaction-topic",
                 transaction.getId().toString(),
                 transaction
-        );
+        ).whenComplete((result, exception) -> {
+
+            if (exception != null) {
+                System.err.println(
+                        "Kafka publish FAILED: "
+                                + transaction.getId()
+                                + " | Error: "
+                                + exception.getMessage()
+                );
+            } else {
+                System.out.println(
+                        "Kafka publish SUCCESS: "
+                                + transaction.getId()
+                                + " | Partition: "
+                                + result.getRecordMetadata().partition()
+                                + " | Offset: "
+                                + result.getRecordMetadata().offset()
+                );
+            }
+        });
     }
 }
