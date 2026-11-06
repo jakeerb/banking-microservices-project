@@ -2,7 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -15,7 +14,6 @@
     <groupId>com.jakeer</groupId>
     <artifactId>transaction-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-
     <name>transaction-service</name>
     <description>Banking Transaction Service</description>
 
@@ -24,7 +22,6 @@
     </properties>
 
     <dependencies>
-
         <!-- REST API -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -50,7 +47,7 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Kafka -->
+        <!-- Apache Kafka -->
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
@@ -70,38 +67,37 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Testing -->
+        <!-- Spring Boot Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
+        <!-- Kafka Testing -->
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka-test</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
         <plugins>
-
+            <!-- Spring Boot -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
+            <!-- Java 17 Compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <release>17</release>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
-
 </project>
