@@ -115,4 +115,28 @@ class TransactionServiceimplTest {
         assertEquals(totalTransactions, transactionService.getTotalTransactions());
         verify(transactionRepository).countTotalTransactions();
     }
+
+    @Test
+    void updateTransactionStatus_whenStatusAlreadySame_doesNotSave() {
+
+        // Step 1: Existing transaction
+        Long transactionId = 15L;
+
+        TransactionEntity transaction = new TransactionEntity();
+        transaction.setStatus(TransactionStatus.APPROVED);
+
+        // Step 2: Mock database response
+        when(transactionRepository.findById(transactionId))
+                .thenReturn(Optional.of(transaction));
+
+        // Step 3: Same status received again
+        transactionService.updateTransactionStatus(
+                transactionId,
+                TransactionStatus.APPROVED
+        );
+
+        // Step 4: Verify no database save
+        verify(transactionRepository, never())
+                .save(any(TransactionEntity.class));
+    }
 }

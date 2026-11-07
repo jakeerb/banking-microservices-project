@@ -64,7 +64,9 @@ public class TransactionServiceimpl implements TransactionService {
                         .orElseThrow(() ->
                                 new RuntimeException(
                                         "Transaction not found: " + transactionId));
-
+        if (transaction.getStatus() == status) {
+            return;
+        }
         transaction.setStatus(status);
 
         transactionRepository.save(transaction);
